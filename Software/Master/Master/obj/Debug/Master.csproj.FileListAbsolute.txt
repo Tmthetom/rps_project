@@ -1,0 +1,11 @@
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Software\Master\Master\bin\Debug\Master.exe.config
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Software\Master\Master\bin\Debug\Master.exe
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Software\Master\Master\bin\Debug\Master.pdb
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Software\Master\Master\obj\Debug\Master.csprojResolveAssemblyReference.cache
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Software\Master\Master\obj\Debug\Master.Form1.resources
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Software\Master\Master\obj\Debug\Master.Properties.Resources.resources
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Software\Master\Master\obj\Debug\Master.csproj.GenerateResource.Cache
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Software\Master\Master\obj\Debug\Master.csproj.CoreCompileInputs.cache
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Software\Master\Master\obj\Debug\Master.exe
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Software\Master\Master\obj\Debug\Master.pdb
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Software\Master\Master\bin\Debug\Modbus.dll
