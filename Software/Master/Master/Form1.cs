@@ -10,19 +10,104 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO.Ports;
 using System.Management;
-
+using Master.Modbus;
 
 namespace Master
 {
     public partial class Form1 : Form
     {
-        #region Initialization
+        private ModbusASCII modbusASCII = new ModbusASCII();
+        private SerialPort serialPort = new SerialPort();
+        private State state;
+        private byte[] bfin = new byte[256];
+        private byte[] bfout = new byte[256];
+        private int ix = 0;
 
+        /// <summary>
+        /// Initialization
+        /// </summary>
         public Form1()
         {
             InitializeComponent();
+            InitializationSerial();
             InitializeControls();
         }
+
+        #region Connection
+
+        private void InitializationSerial()
+        {
+            // Function called, when serial data received
+            serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPortDataReceived);
+        }
+
+        /// <summary>
+        /// Connect to serial
+        /// </summary>
+        /// <param name="portName">COM name</param>
+        /// <param name="baudRate">Communication speed</param>
+        public void Connect(string portName, int baudRate)
+        {
+            if (!serialPort.IsOpen)
+            {
+                serialPort.PortName = portName;
+                serialPort.BaudRate = baudRate;
+                serialPort.Open();
+
+                state = State.stPocatek;
+                timer.Enabled = true;
+            }
+        }
+
+        /// <summary>
+        /// Disconnect from serial
+        /// </summary>
+        public void Disconnect()
+        {
+            serialPort.Close();
+            state = State.stKlid;
+        }
+
+        /// <summary>
+        /// Called when sending serial data
+        /// </summary>
+        /// <param name="o"></param>
+        private void SerialPortSendData(object sender, EventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// Called when serial data received
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            string typ = "";
+
+            int n = -1;
+
+            typ = "Cteni registru";
+            n = modbusASCII.Rd(ModbusSettings.ADR_S, ModbusSettings.FCE_RREG, ModbusSettings.REG_RD, 1, MainWindow.BfOut);
+
+            n += modbusASCII.WrByte(modbusASCII.Lrc(MainWindow.BfOut, 1, n - 1), MainWindow.BfOut, n);
+            n += modbusASCII.WrEoT(MainWindow.BfOut, n);
+
+            state = State.cekani;
+
+            //MainWindow.TimeOut.Stop();
+
+            SerialPortClass.SendData(DataType.modbus, MainWindow.BfOut, n);
+
+            //MainWindow.TimeOut.Start();
+
+            MainWindow.AddTextToStack(typ, MessageType.System);
+        }
+
+        #endregion Connection
+
+        #region Form initialization
 
         private void InitializeControls()
         {
@@ -119,7 +204,16 @@ namespace Master
             }
         }
 
-        #endregion Initialization
+        #endregion Form initialization
+
+        #region UI Control
+
+        private void ConnectDisconnect(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion UI Control
 
         #region Bulb control
 
@@ -133,12 +227,13 @@ namespace Master
 
         #endregion Bulb control
 
+        #region Trackbar
 
         private void TrackBar_ValueChanged(object sender, EventArgs e)
         {
             labelTrackBarValue.Text = trackBar.Value.ToString();
         }
 
-        
+        #endregion Trackbar
     }
 }

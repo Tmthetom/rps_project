@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.textBoxDeviceName = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -39,6 +40,7 @@
             this.trackBar = new System.Windows.Forms.TrackBar();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.labelTrackBarValue = new System.Windows.Forms.Label();
+            this.timer = new System.Windows.Forms.Timer(this.components);
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -76,6 +78,7 @@
             this.button1.TabIndex = 6;
             this.button1.Text = "START";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.ConnectDisconnect);
             // 
             // comboBoxBaudRates
             // 
@@ -153,6 +156,11 @@
             this.labelTrackBarValue.Text = "0";
             this.labelTrackBarValue.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // timer
+            // 
+            this.timer.Interval = 200;
+            this.timer.Tick += new System.EventHandler(this.SerialPortSendData);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -186,6 +194,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label labelTrackBarValue;
         private System.Windows.Forms.TextBox textBoxDeviceName;
+        private System.Windows.Forms.Timer timer;
     }
 }
 

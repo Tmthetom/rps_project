@@ -1,0 +1,29 @@
+D:\RPS\cviceni\cv4\projektModbus\projektModbus\bin\Release\projektModbus.exe.config
+D:\RPS\cviceni\cv4\projektModbus\projektModbus\bin\Release\projektModbus.exe
+D:\RPS\cviceni\cv4\projektModbus\projektModbus\bin\Release\projektModbus.pdb
+D:\RPS\cviceni\cv4\projektModbus\projektModbus\bin\Release\Modbus.dll
+D:\RPS\cviceni\cv4\projektModbus\projektModbus\obj\Release\projektModbus.Form1.resources
+D:\RPS\cviceni\cv4\projektModbus\projektModbus\obj\Release\projektModbus.Properties.Resources.resources
+D:\RPS\cviceni\cv4\projektModbus\projektModbus\obj\Release\projektModbus.csproj.GenerateResource.Cache
+D:\RPS\cviceni\cv4\projektModbus\projektModbus\obj\Release\projektModbus.exe
+D:\RPS\cviceni\cv4\projektModbus\projektModbus\obj\Release\projektModbus.pdb
+D:\RPS\projektModbus\projektModbus\bin\Release\projektModbus.exe.config
+D:\RPS\projektModbus\projektModbus\obj\Release\projektModbus.exe
+D:\RPS\projektModbus\projektModbus\obj\Release\projektModbus.pdb
+D:\RPS\projektModbus\projektModbus\bin\Release\projektModbus.exe
+D:\RPS\projektModbus\projektModbus\bin\Release\projektModbus.pdb
+D:\RPS\projektModbus\projektModbus\bin\Release\Modbus.dll
+D:\RPS\projektModbus\projektModbus\obj\Release\projektModbus.csprojResolveAssemblyReference.cache
+D:\RPS\projektModbus\projektModbus\obj\Release\projektModbus.Form1.resources
+D:\RPS\projektModbus\projektModbus\obj\Release\projektModbus.Properties.Resources.resources
+D:\RPS\projektModbus\projektModbus\obj\Release\projektModbus.csproj.GenerateResource.Cache
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Task\Others\projektModbus\projektModbus\bin\Release\projektModbus.exe.config
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Task\Others\projektModbus\projektModbus\bin\Release\projektModbus.exe
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Task\Others\projektModbus\projektModbus\bin\Release\projektModbus.pdb
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Task\Others\projektModbus\projektModbus\obj\Release\projektModbus.csprojResolveAssemblyReference.cache
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Task\Others\projektModbus\projektModbus\obj\Release\projektModbus.Form1.resources
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Task\Others\projektModbus\projektModbus\obj\Release\projektModbus.Properties.Resources.resources
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Task\Others\projektModbus\projektModbus\obj\Release\projektModbus.csproj.GenerateResource.Cache
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Task\Others\projektModbus\projektModbus\obj\Release\projektModbus.csproj.CoreCompileInputs.cache
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Task\Others\projektModbus\projektModbus\obj\Release\projektModbus.exe
+D:\School\5. Ročník\Zimní semestr\Řídicí počítačové systémy\Semestrální práce\rps_project\Task\Others\projektModbus\projektModbus\obj\Release\projektModbus.pdb
