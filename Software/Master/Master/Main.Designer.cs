@@ -1,6 +1,6 @@
 ﻿namespace Master
 {
-    partial class Form1
+    partial class Main
     {
         /// <summary>
         /// Vyžaduje se proměnná návrháře.

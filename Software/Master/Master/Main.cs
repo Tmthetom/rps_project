@@ -14,7 +14,7 @@ using Master.Modbus;
 
 namespace Master
 {
-    public partial class Form1 : Form
+    public partial class Main : Form
     {
         private ModbusASCII modbusASCII = new ModbusASCII();
         private SerialPort serialPort = new SerialPort();
@@ -26,7 +26,7 @@ namespace Master
         /// <summary>
         /// Initialization
         /// </summary>
-        public Form1()
+        public Main()
         {
             InitializeComponent();
             InitializationSerial();
@@ -78,7 +78,7 @@ namespace Master
         /// <param name="o"></param>
         private void SendData(object sender, EventArgs e)
         {
-
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -88,27 +88,7 @@ namespace Master
         /// <param name="e"></param>
         private void DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            /*
-            string typ = "";
-
-            int n = -1;
-
-            typ = "Cteni registru";
-            n = modbusASCII.Rd(ModbusSettings.ADR_S, ModbusSettings.FCE_RREG, ModbusSettings.REG_RD, 1, MainWindow.BfOut);
-
-            n += modbusASCII.WrByte(modbusASCII.Lrc(MainWindow.BfOut, 1, n - 1), MainWindow.BfOut, n);
-            n += modbusASCII.WrEoT(MainWindow.BfOut, n);
-
-            state = State.cekani;
-
-            //MainWindow.TimeOut.Stop();
-
-            SerialPortClass.SendData(DataType.modbus, MainWindow.BfOut, n);
-
-            //MainWindow.TimeOut.Start();
-
-            MainWindow.AddTextToStack(typ, MessageType.System);
-            */
+            throw new NotImplementedException();
         }
 
         #endregion Communication
