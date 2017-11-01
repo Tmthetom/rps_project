@@ -240,7 +240,6 @@
             // radioButtonSlave
             // 
             this.radioButtonSlave.AutoSize = true;
-            this.radioButtonSlave.Enabled = false;
             this.radioButtonSlave.Location = new System.Drawing.Point(279, 30);
             this.radioButtonSlave.Name = "radioButtonSlave";
             this.radioButtonSlave.Size = new System.Drawing.Size(92, 17);
@@ -248,6 +247,7 @@
             this.radioButtonSlave.TabStop = true;
             this.radioButtonSlave.Text = "Slave (Server)";
             this.radioButtonSlave.UseVisualStyleBackColor = true;
+            this.radioButtonSlave.CheckedChanged += new System.EventHandler(this.ModeChanged);
             // 
             // radioButtonMaster
             // 
