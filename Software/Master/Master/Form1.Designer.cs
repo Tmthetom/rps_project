@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.textBoxDeviceName = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonStartStop = new System.Windows.Forms.Button();
             this.comboBoxBaudRates = new System.Windows.Forms.ComboBox();
             this.comboBoxPorts = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -49,7 +49,7 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.textBoxDeviceName);
-            this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.buttonStartStop);
             this.groupBox1.Controls.Add(this.comboBoxBaudRates);
             this.groupBox1.Controls.Add(this.comboBoxPorts);
             this.groupBox1.Controls.Add(this.label3);
@@ -70,15 +70,17 @@
             this.textBoxDeviceName.Size = new System.Drawing.Size(210, 20);
             this.textBoxDeviceName.TabIndex = 7;
             // 
-            // button1
+            // buttonStartStop
             // 
-            this.button1.Location = new System.Drawing.Point(348, 34);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(65, 99);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "START";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.ConnectDisconnect);
+            this.buttonStartStop.BackColor = System.Drawing.Color.GreenYellow;
+            this.buttonStartStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonStartStop.Location = new System.Drawing.Point(348, 34);
+            this.buttonStartStop.Name = "buttonStartStop";
+            this.buttonStartStop.Size = new System.Drawing.Size(65, 99);
+            this.buttonStartStop.TabIndex = 6;
+            this.buttonStartStop.Text = "OPEN";
+            this.buttonStartStop.UseVisualStyleBackColor = false;
+            this.buttonStartStop.Click += new System.EventHandler(this.ConnectDisconnect);
             // 
             // comboBoxBaudRates
             // 
@@ -159,7 +161,7 @@
             // timer
             // 
             this.timer.Interval = 200;
-            this.timer.Tick += new System.EventHandler(this.SerialPortSendData);
+            this.timer.Tick += new System.EventHandler(this.SendData);
             // 
             // Form1
             // 
@@ -191,7 +193,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonStartStop;
         private System.Windows.Forms.Label labelTrackBarValue;
         private System.Windows.Forms.TextBox textBoxDeviceName;
         private System.Windows.Forms.Timer timer;

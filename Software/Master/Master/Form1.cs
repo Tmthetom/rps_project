@@ -38,7 +38,7 @@ namespace Master
         private void InitializationSerial()
         {
             // Function called, when serial data received
-            serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPortDataReceived);
+            serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceived);
         }
 
         /// <summary>
@@ -68,11 +68,15 @@ namespace Master
             state = State.stKlid;
         }
 
+        #endregion Connection
+
+        #region Communication
+
         /// <summary>
         /// Called when sending serial data
         /// </summary>
         /// <param name="o"></param>
-        private void SerialPortSendData(object sender, EventArgs e)
+        private void SendData(object sender, EventArgs e)
         {
 
         }
@@ -82,8 +86,9 @@ namespace Master
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs e)
+        private void DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
+            /*
             string typ = "";
 
             int n = -1;
@@ -103,9 +108,10 @@ namespace Master
             //MainWindow.TimeOut.Start();
 
             MainWindow.AddTextToStack(typ, MessageType.System);
+            */
         }
 
-        #endregion Connection
+        #endregion Communication
 
         #region Form initialization
 
@@ -196,7 +202,6 @@ namespace Master
                         }
                     }
                 }
-
             }
             catch
             {
@@ -208,12 +213,38 @@ namespace Master
 
         #region UI Control
 
+        #region Connection button
+
         private void ConnectDisconnect(object sender, EventArgs e)
         {
+            try
+            {
+                // Connect
+                if (!serialPort.IsOpen)
+                {
+                    string portName = comboBoxPorts.Text;
+                    int baudRate = Int32.Parse(comboBoxBaudRates.Text);
 
+                    Connect(portName, baudRate);
+                    buttonStartStop.Text = "CLOSE";
+                    buttonStartStop.BackColor = Color.IndianRed;
+                }
+
+                // Disconnect
+                else
+                {
+                    Disconnect();
+                    buttonStartStop.Text = "OPEN";
+                    buttonStartStop.BackColor = Color.GreenYellow;
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+            }
         }
 
-        #endregion UI Control
+        #endregion Connection button
 
         #region Bulb control
 
@@ -235,5 +266,7 @@ namespace Master
         }
 
         #endregion Trackbar
+
+        #endregion UI Control
     }
 }

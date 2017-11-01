@@ -55,12 +55,14 @@ namespace SerialCom
             else LED.BackColor = Color.White;
         }
         private delegate void DlgC(char chr);
- 
+
+        #region DONE
+
         public Form1()
         {
             InitializeComponent();
         }
- 
+
         private void Form1_Load(object sender, EventArgs e)
         {
             string[] ports = SerialPort.GetPortNames();
@@ -88,7 +90,7 @@ namespace SerialCom
  
             Ma = new ModbusASCII();
         }
- 
+
         private void btnOpen_Click(object sender, EventArgs e)
         {
             if (!comPort.IsOpen)
@@ -131,7 +133,9 @@ namespace SerialCom
                 btnOpen.Enabled = true;
             }
         }
- 
+
+        #endregion
+
         private void comPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             while (comPort.BytesToRead > 0)
