@@ -363,6 +363,7 @@ namespace Master
                 // Read byte
                 byte readedByte = (byte)serialPort.ReadByte();
 
+                // Modbus transmission start sign
                 if (readedByte == (byte)':')
                 {
                     bufferIn = new byte[512];
@@ -371,13 +372,17 @@ namespace Master
                     fmsg = true;
                     messageOut = 0;
                 }
+
+                // Continue previous reading
                 else if (fmsg)
                 {
                     index++;
                 }
 
+                // Move reader byte into buffer to process
                 bufferIn[index] = readedByte;
 
+                // Check if byte start with newline
                 if (readedByte == (byte)'\n' && fmsg)
                 {
                     if ((modbusASCII.Lrc(bufferIn, index - 4) == modbusASCII.RdByte(bufferIn, index - 3)))
