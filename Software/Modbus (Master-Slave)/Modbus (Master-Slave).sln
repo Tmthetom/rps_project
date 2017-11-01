@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modbus Master (Client)", "Modbus Master (Client)\Modbus Master (Client).csproj", "{8883FAED-BB43-4308-ACB6-1C1A9DD96B73}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modbus (Master-Slave)", "Modbus (Master-Slave)\Modbus (Master-Slave).csproj", "{818A5833-E747-4914-83AE-7EA1B9675423}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8883FAED-BB43-4308-ACB6-1C1A9DD96B73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8883FAED-BB43-4308-ACB6-1C1A9DD96B73}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8883FAED-BB43-4308-ACB6-1C1A9DD96B73}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8883FAED-BB43-4308-ACB6-1C1A9DD96B73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{818A5833-E747-4914-83AE-7EA1B9675423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{818A5833-E747-4914-83AE-7EA1B9675423}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{818A5833-E747-4914-83AE-7EA1B9675423}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{818A5833-E747-4914-83AE-7EA1B9675423}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {E15A84B0-369F-40EC-B95A-743DFDF5F83E}
+		SolutionGuid = {9D8AF738-4A43-4643-858C-40A937D4271C}
 	EndGlobalSection
 EndGlobal
