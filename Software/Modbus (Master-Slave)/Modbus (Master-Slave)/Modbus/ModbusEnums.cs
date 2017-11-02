@@ -8,10 +8,10 @@ namespace Master.Modbus
 {
     public enum State
     {
-        stPocatek,
-        stKlid,
-        cekani,
-        stPrijem,
-        stVysilani
+        start,
+        calm,
+        waiting,
+        receiving,
+        broadcasting
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.groupBoxConnection = new System.Windows.Forms.GroupBox();
             this.textBoxDeviceName = new System.Windows.Forms.TextBox();
             this.buttonStartStop = new System.Windows.Forms.Button();
@@ -41,13 +42,14 @@
             this.labelTrackBarValue = new System.Windows.Forms.Label();
             this.groupBoxTrackbar = new System.Windows.Forms.GroupBox();
             this.groupBoxValue = new System.Windows.Forms.GroupBox();
-            this.buttonLightUp = new System.Windows.Forms.Button();
             this.labelReceivedValue = new System.Windows.Forms.Label();
+            this.buttonLightUp = new System.Windows.Forms.Button();
             this.groupBoxLed = new System.Windows.Forms.GroupBox();
             this.groupBoxMode = new System.Windows.Forms.GroupBox();
             this.radioButtonSlave = new System.Windows.Forms.RadioButton();
             this.radioButtonMaster = new System.Windows.Forms.RadioButton();
             this.label4 = new System.Windows.Forms.Label();
+            this.MasterClientSender = new System.Windows.Forms.Timer(this.components);
             this.groupBoxConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -183,8 +185,8 @@
             // 
             // groupBoxValue
             // 
-            this.groupBoxValue.Controls.Add(this.buttonLightUp);
             this.groupBoxValue.Controls.Add(this.labelReceivedValue);
+            this.groupBoxValue.Controls.Add(this.buttonLightUp);
             this.groupBoxValue.Enabled = false;
             this.groupBoxValue.Location = new System.Drawing.Point(12, 258);
             this.groupBoxValue.Name = "groupBoxValue";
@@ -192,16 +194,6 @@
             this.groupBoxValue.TabIndex = 5;
             this.groupBoxValue.TabStop = false;
             this.groupBoxValue.Text = "Value";
-            // 
-            // buttonLightUp
-            // 
-            this.buttonLightUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.buttonLightUp.Location = new System.Drawing.Point(254, 20);
-            this.buttonLightUp.Name = "buttonLightUp";
-            this.buttonLightUp.Size = new System.Drawing.Size(157, 60);
-            this.buttonLightUp.TabIndex = 7;
-            this.buttonLightUp.Text = "LIGHT UP";
-            this.buttonLightUp.UseVisualStyleBackColor = true;
             // 
             // labelReceivedValue
             // 
@@ -213,6 +205,18 @@
             this.labelReceivedValue.TabIndex = 6;
             this.labelReceivedValue.Text = "0";
             this.labelReceivedValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // buttonLightUp
+            // 
+            this.buttonLightUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.buttonLightUp.Location = new System.Drawing.Point(254, 20);
+            this.buttonLightUp.Name = "buttonLightUp";
+            this.buttonLightUp.Size = new System.Drawing.Size(157, 60);
+            this.buttonLightUp.TabIndex = 7;
+            this.buttonLightUp.Text = "LIGHT UP";
+            this.buttonLightUp.UseVisualStyleBackColor = true;
+            this.buttonLightUp.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ButtonLightUp_MouseDown);
+            this.buttonLightUp.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ButtonLightUp_MouseUp);
             // 
             // groupBoxLed
             // 
@@ -271,6 +275,12 @@
             this.label4.TabIndex = 8;
             this.label4.Text = "Role:";
             // 
+            // MasterClientSender
+            // 
+            this.MasterClientSender.Enabled = true;
+            this.MasterClientSender.Interval = 200;
+            this.MasterClientSender.Tick += new System.EventHandler(this.MasterClientSender_Tick);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -317,8 +327,9 @@
         private System.Windows.Forms.RadioButton radioButtonMaster;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.GroupBox groupBoxValue;
-        private System.Windows.Forms.Label labelReceivedValue;
         private System.Windows.Forms.Button buttonLightUp;
+        public System.Windows.Forms.Label labelReceivedValue;
+        private System.Windows.Forms.Timer MasterClientSender;
     }
 }
 

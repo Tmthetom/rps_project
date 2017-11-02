@@ -80,7 +80,7 @@ namespace Master
             // Select index of wanted baudRate
             for (int i = 0; i < baudRates.Length; i++)
             {
-                if (comboBoxBaudRates.Items[i].ToString() == "9600")
+                if (comboBoxBaudRates.Items[i].ToString() == "19200")
                 {
                     comboBoxBaudRates.SelectedIndex = i;
                     break;
@@ -97,6 +97,7 @@ namespace Master
 
             // Default serial data received
             serialPort.DataReceived += new SerialDataReceivedEventHandler(MasterClientHandler);
+            TimeOut.Elapsed += new System.Timers.ElapsedEventHandler(TimeOut_Tick);
         }
 
         /// <summary>
@@ -171,9 +172,83 @@ namespace Master
 
         #region Communication (master-client/slave-server)
 
+        #region Variables
+
+        // Common
         private ModbusASCII modbusASCII = new ModbusASCII();
 
+        int value;
+        int index = 0;
+        int messageOut = 0;
+
+        byte registerAddress = ModbusSettings.ADR_S;
+        byte registerCode = 0;
+        byte errorCode = 0;
+
+        short readedShortRegister;
+        short readedShortValue;
+
+        ushort readedRegister;
+        ushort readedValue;
+
+        byte[] vals = new byte[1];
+        byte[] bufferIn = new byte[512];
+        byte[] bufferOut = new byte[512];
+
+        // Master (Client)
+        State state = State.calm;
+        bool prepared = false;
+        System.Timers.Timer TimeOut = new System.Timers.Timer(500);
+
+        // Slave (Server)
+        bool flagMessage = false;
+
+        #endregion
+
         #region Master (Client)
+
+        /// <summary>
+        /// Timeout check after 500 ms wating
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void TimeOut_Tick(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (state == State.waiting && serialPort.IsOpen)
+            {
+                state = State.calm;
+            }
+            TimeOut.Enabled = false;
+        }
+
+        /// <summary>
+        /// Sending request every 200 ms
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MasterClientSender_Tick(object sender, EventArgs e)
+        {
+            if (serialPort.IsOpen && state == State.calm)
+            {
+                // Set broadcasting on
+                state = State.broadcasting;
+                prepared = !prepared;
+
+                // Prepare message
+                if (prepared) messageOut = modbusASCII.WrOne(ModbusSettings.ADR_S, ModbusSettings.FCE_WREG, 0, (ushort)trackBar.Value, bufferOut);
+                else messageOut = modbusASCII.Rd(ModbusSettings.ADR_S, ModbusSettings.FCE_RBIT, ModbusSettings.BIT_RD, 1, bufferOut);
+
+                // Send message
+                messageOut = modbusASCII.WrByte(modbusASCII.Lrc(bufferOut, messageOut - 1), bufferOut, messageOut);
+                messageOut = modbusASCII.WrEoT(bufferOut, messageOut);
+                serialPort.Write(bufferOut, 0, messageOut);
+
+                // Set timout for response
+                TimeOut.Interval = 500;
+                TimeOut.Enabled = true;
+                state = State.waiting;
+            }
+        }
 
         /// <summary>
         /// Called when serial data received
@@ -182,25 +257,82 @@ namespace Master
         /// <param name="e"></param>
         private void MasterClientHandler(object sender, SerialDataReceivedEventArgs e)
         {
-            MessageBox.Show("Beeem");
+            // While we have data to read
+            while (serialPort.BytesToRead > 0)
+            {
+                // Read byte
+                byte readedByte = (byte)serialPort.ReadByte();
+
+                switch (state)
+                {
+                    case State.waiting:
+
+                        // Modbus transmission start sign
+                        if (readedByte == (byte)':')
+                        {
+                            // Set receiving
+                            state = State.receiving;
+                            bufferIn[index = 0] = readedByte;
+                        }
+                        break;
+
+                    case State.receiving:
+
+                        // Modbus transmission start sign
+                        if (readedByte == (byte)':') index = 0;
+
+                        // Continue previous reading
+                        else index++;
+
+                        // Read at index
+                        bufferIn[index] = readedByte;
+
+                        // Check if byte start with newline
+                        if (readedByte == (byte)'\n')
+                        {
+                            if ((modbusASCII.Lrc(bufferIn, index - 4) != modbusASCII.RdByte(bufferIn, index - 3)))
+                            {
+                                ;
+                            }
+
+                            // Read register address and code from buffer
+                            registerAddress = modbusASCII.RdByte(bufferIn, 1);
+                            registerCode = modbusASCII.RdByte(bufferIn, 3);
+
+                            // Read LED value
+                            if (registerCode == ModbusSettings.FCE_RBIT)
+                            {                                
+                                // Read from buffer
+                                readedShortRegister = modbusASCII.RdByte(bufferIn, 5);
+                                readedShortValue = modbusASCII.RdByte(bufferIn, 7);
+
+                                // Show color
+                                if (registerAddress == ModbusSettings.ADR_S && readedShortRegister == 1)
+                                {
+                                    if (readedShortValue > 0)
+                                    {
+                                        ChangeBulbStateImage(true);
+                                    }
+                                    else
+                                    {
+                                        ChangeBulbStateImage(false);
+                                    }
+                                }
+                            }
+                            else if (registerCode >= 0x80)
+                            {
+                                errorCode = modbusASCII.RdByte(bufferIn, 5);
+                            }
+                            state = State.calm;
+                        }
+                        break;
+                }
+            }
         }
 
         #endregion
 
         #region Slave (Server)
-
-        int value;
-        int index = 0;
-        int messageOut = 0;
-        bool fmsg = false;
-        byte adr_r = ModbusSettings.ADR_S;
-        byte registerCode = 0;
-        byte errorCode = 0;
-        ushort readedRegister = 0;
-        ushort readedValue;
-        byte[] vals = new byte[2];
-        byte[] bufferIn = new byte[512];
-        byte[] bufferOut = new byte[512];
 
         /// <summary>
         /// Called when serial data received
@@ -218,109 +350,69 @@ namespace Master
                 // Modbus transmission start sign
                 if (readedByte == (byte)':')
                 {
+                    // Reset variables
                     bufferIn = new byte[512];
                     bufferOut = new byte[512];
                     index = 0;
-                    fmsg = true;
+                    flagMessage = true;
                     messageOut = 0;
                 }
 
                 // Continue previous reading
-                else if (fmsg)
-                {
-                    index++;
-                }
+                else if (flagMessage) index++;
 
                 // Move reader byte into buffer to process
                 bufferIn[index] = readedByte;
 
                 // Check if byte start with newline
-                if (readedByte == (byte)'\n' && fmsg)
+                if (readedByte == (byte)'\n' && flagMessage)
                 {
                     if ((modbusASCII.Lrc(bufferIn, index - 4) == modbusASCII.RdByte(bufferIn, index - 3)))
                     {
-                        adr_r = modbusASCII.RdByte(bufferIn, 1);
-                        if (adr_r == ModbusSettings.ADR_S)
+                        registerAddress = modbusASCII.RdByte(bufferIn, 1);
+                        if (registerAddress == ModbusSettings.ADR_S)
                         {
                             registerCode = modbusASCII.RdByte(bufferIn, 3);
                             errorCode = 0;
                             switch (registerCode)
                             {
-                                // Function: Send value of trackbar
-                                case ModbusSettings.FCE_RREG:
+                                // Function: Read value
+                                case ModbusSettings.FCE_WREG:
 
                                     // Read from buffer
                                     readedRegister = modbusASCII.RdWord(bufferIn, 5);
                                     readedValue = modbusASCII.RdWord(bufferIn, 9);
 
-                                    // Check if register remains its function
-                                    if (readedRegister == ModbusSettings.REG_RD || readedValue != 1)
-                                    {
-                                        // Convert values
-                                        vals[0] = (byte)(value / 256);  // MSB -> vals[0]
-                                        vals[1] = (byte)(value % 256);  // LSB -> vals[1]
+                                    // Check validity
+                                    if (readedRegister != ModbusSettings.REG_WR) errorCode = 2;  // Check if register remains its function
+                                    else if (readedValue > 1023) errorCode = 3;  // Check if value is in range
 
-                                        // Prepare message to send
-                                        messageOut = modbusASCII.AnsRd(ModbusSettings.ADR_S, registerCode, 2, vals, bufferOut);
-
-                                        // Send message
-                                        messageOut = modbusASCII.WrByte(modbusASCII.Lrc(bufferOut, messageOut - 1), bufferOut, messageOut);
-                                        messageOut = modbusASCII.WrEoT(bufferOut, messageOut);
-                                        serialPort.Write(bufferOut, 0, messageOut);
+                                    // Show value
+                                    else {
+                                        labelReceivedValue.Invoke((Action)delegate { labelReceivedValue.Text = readedValue.ToString(); });
                                     }
+
+                                    // Prepare answer
+                                    if (errorCode == 0) messageOut = modbusASCII.AnsWr(ModbusSettings.ADR_S, registerCode, readedRegister, readedValue, bufferOut);
+
                                     break;
 
-                                // Function: Button will light up bulb
-                                case ModbusSettings.FCE_WBIT:
+                                // Function: Button state send
+                                case ModbusSettings.FCE_RBIT:
 
                                     // Read from buffer
                                     readedRegister = modbusASCII.RdWord(bufferIn, 5);
                                     readedValue = modbusASCII.RdWord(bufferIn, 9);
 
-                                    // Check if register remains its function
-                                    if (readedRegister == ModbusSettings.BIT_WR)
-                                    {
-                                        switch (readedValue)
-                                        {
-                                            // LIGHT ON
-                                            case 0xFF00:
-                                                ChangeBulbStateImage(true);
-                                                break;
+                                    // Check validity
+                                    if (readedRegister != ModbusSettings.BIT_RD || readedValue != 1) errorCode = 2;  // Check if register remains its function
 
-                                            // LIGHT OFF
-                                            case 0x0000:
-                                                ChangeBulbStateImage(false);
-                                                break;
-
-                                            // ERROR
-                                            default:
-                                                errorCode = 3;
-                                                break;
-                                        }
-                                    }
-
-                                    // If not remains -> ERROR
+                                    // Send button state
                                     else
                                     {
-                                        errorCode = 2;
+                                        vals[0] = (buttonLightUpOn) ? (byte)0xFF : (byte)0x00;
+                                        messageOut = modbusASCII.AnsRd(ModbusSettings.ADR_S, registerCode, 1, vals, bufferOut);
                                     }
-
-                                    // No error response
-                                    if (errorCode == 0)
-                                    {
-                                        messageOut = modbusASCII.AnsWr(ModbusSettings.ADR_S, registerCode, readedRegister, readedValue, bufferOut);
-                                    }
-
-                                    // Error response
-                                    if (errorCode > 0)
-                                    {
-                                        messageOut = modbusASCII.AnsErr(adr_r, (byte)(registerCode | 0x80), errorCode, bufferOut);
-                                    }
-
-                                    // Send message
-                                    messageOut = modbusASCII.WrByte(modbusASCII.Lrc(bufferOut, messageOut - 1), bufferOut, messageOut);
-                                    messageOut = modbusASCII.WrEoT(bufferOut, messageOut);
-                                    serialPort.Write(bufferOut, 0, messageOut);
                                     break;
 
                                 // ERROR
@@ -328,8 +420,16 @@ namespace Master
                                     errorCode = 1;
                                     break;
                             }
+
+                            // If error -> add to message
+                            if (errorCode > 0) messageOut = modbusASCII.AnsErr(registerAddress, (byte)(registerCode | 0x80), errorCode, bufferOut);
+
+                            // Send response
+                            messageOut = modbusASCII.WrByte(modbusASCII.Lrc(bufferOut, messageOut - 1), bufferOut, messageOut);
+                            messageOut = modbusASCII.WrEoT(bufferOut, messageOut);
+                            serialPort.Write(bufferOut, 0, messageOut);
                         }
-                        fmsg = false;
+                        flagMessage = false;
                     }
                 }
             }
@@ -493,6 +593,22 @@ namespace Master
         {
             labelTrackBarValue.Text = trackBar.Value.ToString();
             value = trackBar.Value;
+        }
+
+        #endregion
+
+        #region Light up button
+
+        bool buttonLightUpOn = false;
+
+        private void ButtonLightUp_MouseDown(object sender, MouseEventArgs e)
+        {
+            buttonLightUpOn = true;
+        }
+
+        private void ButtonLightUp_MouseUp(object sender, MouseEventArgs e)
+        {
+            buttonLightUpOn = false;
         }
 
         #endregion
