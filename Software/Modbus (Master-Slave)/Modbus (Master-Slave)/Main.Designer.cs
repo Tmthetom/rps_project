@@ -291,6 +291,8 @@
             this.Controls.Add(this.groupBoxConnection);
             this.Controls.Add(this.groupBoxTrackbar);
             this.Controls.Add(this.groupBoxValue);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "Main";
             this.Text = "Tomáš Moravec - MA1M - Modbus (Master-Slave) - ASCII";
             this.groupBoxConnection.ResumeLayout(false);
