@@ -1,0 +1,20 @@
+-myux
+-i main.ihx
+-Y
+-z
+-b HOME = 0x0000
+-b ISEG = 0x0000
+-b BSEG = 0x0000
+-k C:\PROGRAM FILES (X86)\SDCC\BIN\..\lib\small
+-l mcs51
+-l libsdcc
+-l libint
+-l liblong
+-l libfloat
+main.rel
+adc.rel
+lcd.rel
+ledbar.rel
+modbus.rel
+
+-e
