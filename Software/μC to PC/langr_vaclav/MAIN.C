@@ -50,7 +50,7 @@ void LedBar(word);
 // globalni promenne
 __bit prep;
 int itx;
-unsigned char index;
+unsigned char index, lrc;
 
 xbyte bufferIn[256], bufferOut[256];  // v externi pameti
 enum { stKlid, stCekani, stPrijem } stav;

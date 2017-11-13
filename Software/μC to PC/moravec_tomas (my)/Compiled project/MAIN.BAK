@@ -155,7 +155,7 @@ void main(void)
 							// Send button state
 							if ((readedRegister = MbRdWord(bufferIn + 5)) == BIT_RD && (pocet = MbRdWord(bufferIn + 9)) == 1)
 							{
-								bity[0] = !TLAC;
+								bity[0] = TLAC ? 0 : 0xFF00;
 								itx = MbAnsRd(ADR_S, registerCode, 1, bity, bufferOut);
 							}
 
