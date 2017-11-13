@@ -1,0 +1,1 @@
+Bylo oznámeno, že třetí část je dobrovolná, takže jí dělat nebudu :P
