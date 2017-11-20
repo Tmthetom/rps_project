@@ -1,5 +1,3 @@
-// Semestrální práce Václav Langr
-
 #include <AT89C51CC03.h>
 #include <stdio.h>
 #include "typy.h"
@@ -50,12 +48,13 @@ void LedBar(word);
 // globalni promenne
 __bit prep;
 int itx;
-unsigned char index, lrc;
+unsigned char ix;
 
-xbyte bufferIn[256], bufferOut[256];  // v externi pameti
+xbyte bfin[256], bfout[256];  // v externi pameti
 enum { stKlid, stCekani, stPrijem } stav;
-byte cnt_ticks;
-word valAD;
+byte cnt_ticks, er;
+word valAD, reg, val;
+byte vals[2];
 
 // inicializace èasovaèù
 void TimerInit()
@@ -123,7 +122,7 @@ void main(void)
 		TR1 = 0;
 	} while (RI);
 	stav = stKlid;
-	index = 0;
+	ix = 0;
 	while (1)
 	{
 		if (TF0)   // tiky
@@ -133,24 +132,26 @@ void main(void)
 			TL0 = (byte)(-T_30MS);
 			cnt_ticks++;
 			//if (cnt_ticks == N_TICKS && stav == stKlid)    //cas pro vyslani - pro Mastera
-	 	    if(cnt_ticks == N_TICKS)  // /* hodnota potenciometru - pro Slave */
+			if(cnt_ticks == N_TICKS)  // /* hodnota potenciometru - pro Slave */
 			{
 				cnt_ticks = 0;
 				prep = !prep;
-				if (prep) {
-					itx = MrtuAndWr(ADR_S, FCE_WBIT, BIT_WR, 1, bufferOut);
+				if (prep) {	
+					if ((val = RdWord(bfin + 4)) != 0 && val != 0xFF00) er = 3;
+					else LED_G = (val == 0xFF00) ? 0 : 1;
+					itx = MrtuAnsWr(ADR_S, FCE_WBIT, BIT_WR, 1, bfout);
 				}
 				else {
 					valAD = AdcConv(CHANNEL0);
-					byte vals[];
+					printf("\npotak: %d\n", valAD);
 					vals[0] = valAD >> 8;
 					vals[1] = valAD;
-					itx = MrtuAnsRd(ADR_S, FCE_RREG, 2, vals, bufferOut);
+					itx = MrtuAnsRd(ADR_S, FCE_RREG, 2, vals, bfout);
 				}
-				if(er)itx = MrtuAnsErr(ADR_S, kod_r|0x80, er, bufferOut);
+				//if(er)itx = MrtuAnsErr(ADR_S, FCE_RREG|0x80, er, bfout);
 				//DIR485 = 1; //na vysilani
-				itx += MrtuWrCrc(MrtuCrc(bufferOut, itx), bufferOut + itx);
-				SendBuf(bufferOut, itx);
+				itx += MrtuWrCrc(MrtuCrc(bfout, itx), bfout + itx);
+				SendBuf(bfout, itx);
 				stav = stCekani;
 				//DIR485 = 0; //na prijem
 			}
@@ -158,22 +159,12 @@ void main(void)
 
 		if (RI) //prisel byte
 		{
-			bufferIn[index++] = SBUF;
+			bfin[ix++] = SBUF;
 			RI = 0;
 			TH1 = (word)(-N3_5) >> 8;
 			TL1 = (byte)(-N3_5);
 			TF1 = 0;
-
-			switch (stav)
-			{
-			case stCekani:
-				index = 0;
-				stav = stPrijem;
-				TR1 = 1;
-				break;
-			case stPrijem:
-				break;
-			}
+			TR1 = 1;
 		}
 
 		//   pro RTU - interval cca 3,5 znaku
@@ -184,22 +175,22 @@ void main(void)
 			// zpracovani pozadavku
 			if (stav == stPrijem) {
 				byte kod_r;
-				if ((bufferIn[0] == ADR_S) && MrtuCrc(bufferIn, index - 2) == MrtuRdCrc(bufferIn + index - 2)) {
-					kod_r = bufferIn[1];
+				if ((bfin[0] == ADR_S) && MrtuCrc(bfin, ix - 2) == MrtuRdCrc(bfin + ix - 2)) {
+					kod_r = bfin[1];
 					if (kod_r == FCE_WBIT) {
-						__bit pressed = (RdWord(bufferIn + 3) == 0x00);
-						pressed = pressed && (RdWord(bufferIn + 2) == 0xFF);
-						if (pressed) {
-							LED_G = 0;
-						}
-						else {
-							LED_G = 1;
-						}
+						__bit pressed = (RdWord(bfin + 3) == 0x00);
+						//pressed = pressed && (RdWord(bfin + 2) == 0xFF);
+						//if (pressed) {
+							//LED_G = 0;
+						//}
+						//else {
+							//LED_G = 1;
+						//}
 					}
 				}
 				stav = stKlid;
 			}
-			index = 0;
+			ix = 0;
 		}
 	}
 }
